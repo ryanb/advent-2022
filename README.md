@@ -1,21 +1,17 @@
 # Advent2022
 
-**TODO: Add description**
+Ryan Bates's attempt at solving Advent of Code 2022 in Elixir.
 
-## Installation
+## Run
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `advent2022` to your list of dependencies in `mix.exs`:
+You can run any given day through `mix`.
 
-```elixir
-def deps do
-  [
-    {:advent2022, "~> 0.1.0"}
-  ]
-end
+```bash
+mix day01
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/advent2022>.
+You can also run the full test suite.
 
+```bash
+mix test
+```
