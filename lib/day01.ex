@@ -23,13 +23,6 @@ defmodule Day01.Part2 do
     |> Enum.take(-3)
     |> Enum.sum()
   end
-
-  def sum_lines(sub_input) do
-    sub_input
-    |> String.split("\n", trim: true)
-    |> Enum.map(&String.to_integer/1)
-    |> Enum.sum()
-  end
 end
 
 defmodule Mix.Tasks.Day01 do
@@ -38,10 +31,10 @@ defmodule Mix.Tasks.Day01 do
   def run(_) do
     {:ok, input} = File.read("inputs/day01-input.txt")
 
-    IO.puts("--- Day 1, Part 1 ---")
+    IO.puts("--- Part 1 ---")
     IO.puts(Day01.Part1.solve(input))
-
-    IO.puts("--- Day 1, Part 2 ---")
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
     IO.puts(Day01.Part2.solve(input))
   end
 end
