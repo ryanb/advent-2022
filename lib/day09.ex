@@ -81,6 +81,38 @@ defmodule Day09.Part1 do
 end
 
 defmodule Day09.Part2 do
+  # The problem has 10 knots, but we want 9 sections since it represents
+  # inbetween the knots
+  @sections 9
+
+  def solve(input) do
+    # Each section is a head and tail combo, the head of one section is synced
+    # with the tail of the previous section
+    section = %{head: {0, 0}, tails: [{0, 0}]}
+    sections = [section] |> List.duplicate(@sections) |> :lists.concat()
+
+    input
+    |> Day09.Part1.parse_input()
+    |> Enum.reduce(sections, &move_rope/2)
+    |> List.last()
+    |> Map.fetch!(:tails)
+    |> Enum.uniq()
+    |> length
+  end
+
+  def move_rope(direction, sections) do
+    first_section = Day09.Part1.move_rope(direction, hd(sections))
+    Enum.reduce(tl(sections), [first_section], &move_section/2) |> Enum.reverse()
+  end
+
+  # Move each section one at a time and add it to the head of the moved sections
+  # This rebuilds the sections in reverse order
+  def move_section(section, moved_sections) do
+    # This section's head is the previous section's tail
+    new_head = hd(hd(moved_sections).tails)
+    moved_section = Day09.Part1.move_tail(%{section | head: new_head})
+    [moved_section | moved_sections]
+  end
 end
 
 defmodule Mix.Tasks.Day09 do
@@ -91,8 +123,8 @@ defmodule Mix.Tasks.Day09 do
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day09.Part1.solve(input))
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day09.Part2.solve(input))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(Day09.Part2.solve(input))
   end
 end

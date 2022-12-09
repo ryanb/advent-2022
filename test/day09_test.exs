@@ -12,6 +12,17 @@ defmodule Day09Test do
   R 2
   """
 
+  @example_input_2 """
+  R 5
+  U 8
+  L 8
+  D 3
+  R 17
+  D 10
+  L 25
+  U 20
+  """
+
   test "solves example input for part 1" do
     assert Day09.Part1.solve(@example_input) == 13
   end
@@ -49,5 +60,12 @@ defmodule Day09Test do
       assert Day09.Part1.is_touching?(head: {-1, -1}, tail: {0, 0}) == true
       assert Day09.Part1.is_touching?(head: {-2, -1}, tail: {0, 0}) == false
     end
+  end
+
+  # Part 2
+
+  test "solves example input for part 2" do
+    assert Day09.Part2.solve(@example_input) == 1
+    assert Day09.Part2.solve(@example_input_2) == 36
   end
 end
