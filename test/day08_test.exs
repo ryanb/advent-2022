@@ -1,7 +1,6 @@
 defmodule Day08Test do
   use ExUnit.Case
 
-  # The pipes are added to prevent losing whitespace
   @example_input """
   30373
   25512
@@ -78,7 +77,44 @@ defmodule Day08Test do
     test "returns two lists around given index" do
       assert Day08.Part1.split_row([1, 2, 3], 0) == [[], [2, 3]]
       assert Day08.Part1.split_row([1, 2, 3], 1) == [[1], [3]]
-      assert Day08.Part1.split_row([1, 2, 3], 2) == [[1, 2], []]
+      assert Day08.Part1.split_row([1, 2, 3], 2) == [[2, 1], []]
+    end
+  end
+
+  # Part 2
+
+  test "solves example input for part 2" do
+    assert Day08.Part2.solve(@example_input) == 8
+  end
+
+  describe ".highest_scenic_score" do
+    test "returns highest score of a grid of trees" do
+      tree_rows = [
+        [1, 1, 1, 1, 1, 1],
+        [1, 2, 3, 2, 3, 1],
+        [1, 1, 1, 1, 1, 1]
+      ]
+
+      assert Day08.Part2.highest_scenic_score(tree_rows) == 4
+    end
+  end
+
+  describe ".scenic_score" do
+    test "returns number of visible trees multiplied together" do
+      tree_rows = [
+        [1, 1, 1, 1, 1, 1],
+        [1, 2, 3, 2, 3, 1],
+        [1, 1, 1, 1, 1, 1]
+      ]
+
+      assert Day08.Part2.scenic_score(tree_rows, x: 2, y: 1) == 4
+    end
+  end
+
+  describe ".visible_trees_from_tree" do
+    test "returns number of visible trees in a row" do
+      assert Day08.Part2.visible_trees_from_tree(5, [1, 2, 5, 4]) == 3
+      assert Day08.Part2.visible_trees_from_tree(5, [1]) == 1
     end
   end
 end

@@ -1,7 +1,6 @@
 defmodule Day06Test do
   use ExUnit.Case
 
-  # The pipes are added to prevent losing whitespace
   @example_input """
   mjqjpqmgbljsphdztnvjfqwrcgsmlb
   """

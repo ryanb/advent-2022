@@ -1,7 +1,6 @@
 defmodule Day07Test do
   use ExUnit.Case
 
-  # The pipes are added to prevent losing whitespace
   @example_input """
   $ cd /
   $ ls
