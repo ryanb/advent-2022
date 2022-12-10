@@ -175,4 +175,45 @@ defmodule Day10Test do
       assert Day10.Part1.run("addx 2", state) == expected
     end
   end
+
+  # Part 2
+
+  test "solves example input for part 2" do
+    expected = """
+    ##..##..##..##..##..##..##..##..##..##..
+    ###...###...###...###...###...###...###.
+    ####....####....####....####....####....
+    #####.....#####.....#####.....#####.....
+    ######......######......######......####
+    #######.......#######.......#######.....
+    """
+
+    assert Day10.Part2.solve(@example_input) == String.trim(expected)
+  end
+
+  describe ".cycle" do
+    test "adds pixel based on register" do
+      state = %{register: 1, pixels: []}
+      expected = %{register: 1, pixels: ["#"]}
+      assert Day10.Part2.cycle(state) == expected
+    end
+  end
+
+  describe ".pixel" do
+    test "returns # when cycles is near register" do
+      assert Day10.Part2.pixel(cycles: 1, register: 3) == "."
+      assert Day10.Part2.pixel(cycles: 2, register: 3) == "#"
+      assert Day10.Part2.pixel(cycles: 3, register: 3) == "#"
+      assert Day10.Part2.pixel(cycles: 4, register: 3) == "#"
+      assert Day10.Part2.pixel(cycles: 5, register: 3) == "."
+    end
+
+    test "mods cycles by screen width" do
+      assert Day10.Part2.pixel(cycles: 41, register: 3) == "."
+      assert Day10.Part2.pixel(cycles: 42, register: 3) == "#"
+      assert Day10.Part2.pixel(cycles: 43, register: 3) == "#"
+      assert Day10.Part2.pixel(cycles: 44, register: 3) == "#"
+      assert Day10.Part2.pixel(cycles: 45, register: 3) == "."
+    end
+  end
 end

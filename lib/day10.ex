@@ -41,6 +41,43 @@ defmodule Day10.Part1 do
 end
 
 defmodule Day10.Part2 do
+  @screen_width 40
+
+  def solve(input) do
+    state = %{register: 1, pixels: []}
+
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.reduce(state, &run/2)
+    |> Map.fetch!(:pixels)
+    |> Enum.reverse()
+    |> Enum.chunk_every(@screen_width)
+    |> Enum.map(fn pixels -> Enum.join(pixels, "") end)
+    |> Enum.join("\n")
+  end
+
+  def run(command, state) do
+    if command == "noop" do
+      state |> cycle()
+    else
+      [_, amount] = String.split(command, " ")
+
+      state |> cycle() |> cycle() |> Day10.Part1.add_register(String.to_integer(amount))
+    end
+  end
+
+  def cycle(state) do
+    pixels = [pixel(cycles: length(state.pixels), register: state.register) | state.pixels]
+    %{state | pixels: pixels}
+  end
+
+  def pixel(cycles: cycles, register: register) do
+    if Enum.member?((register - 1)..(register + 1), rem(cycles, @screen_width)) do
+      "#"
+    else
+      "."
+    end
+  end
 end
 
 defmodule Mix.Tasks.Day10 do
@@ -51,8 +88,8 @@ defmodule Mix.Tasks.Day10 do
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day10.Part1.solve(input))
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day10.Part2.solve(input))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(Day10.Part2.solve(input))
   end
 end
