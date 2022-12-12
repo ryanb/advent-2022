@@ -99,4 +99,10 @@ defmodule Day11Test do
       assert Day11.Part1.parse_monkey(monkey) == expected
     end
   end
+
+  # Part 2
+
+  test "solves example input for part 2" do
+    assert Day11.Part2.solve(@example_input) == 2_713_310_158
+  end
 end

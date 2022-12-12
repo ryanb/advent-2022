@@ -114,15 +114,64 @@ defmodule Day11.Part1 do
 
   def apply_item_transition(item_transition, monkeys) do
     monkey = monkeys[item_transition.recipient]
+    item = rem(item_transition.item, common_multiple(monkeys))
 
     Map.put(monkeys, item_transition.recipient, %{
       monkey
-      | items: monkey.items ++ [item_transition.item]
+      | items: monkey.items ++ [item]
     })
+  end
+
+  def common_multiple(monkeys) do
+    monkeys
+    |> Enum.map(fn {_key, monkey} -> monkey.divisible end)
+    |> List.to_tuple()
+    |> Tuple.product()
   end
 end
 
 defmodule Day11.Part2 do
+  @rounds 10000
+
+  def solve(input) do
+    monkeys = input |> Day11.Part1.parse_monkeys()
+    turns = monkeys |> Map.keys() |> Enum.sort() |> List.duplicate(@rounds) |> List.flatten()
+
+    turns
+    |> Enum.reduce(monkeys, &take_turn/2)
+    |> Enum.map(fn {_key, monkey} -> monkey.inspections end)
+    |> Enum.sort()
+    |> Enum.reverse()
+    |> Enum.take(2)
+    |> List.to_tuple()
+    |> Tuple.product()
+  end
+
+  def take_turn(index, monkeys) do
+    monkey = monkeys[index]
+
+    monkey.items
+    |> Enum.map(&build_item_transition(&1, monkey))
+    |> Enum.reduce(monkeys, &Day11.Part1.apply_item_transition/2)
+    |> Map.put(index, %{
+      monkey
+      | items: [],
+        inspections: monkey.inspections + length(monkey.items)
+    })
+  end
+
+  def build_item_transition(item, monkey) do
+    new_item = inspect_item(item, monkey.operation)
+
+    %{
+      item: new_item,
+      recipient: Day11.Part1.item_recipient(new_item, monkey)
+    }
+  end
+
+  def inspect_item(item, operation) do
+    item |> Day11.Part1.perform_operation(operation)
+  end
 end
 
 defmodule Mix.Tasks.Day11 do
@@ -133,8 +182,8 @@ defmodule Mix.Tasks.Day11 do
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day11.Part1.solve(input))
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day11.Part2.solve(input))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(Day11.Part2.solve(input))
   end
 end
