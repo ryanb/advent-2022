@@ -102,6 +102,32 @@ defmodule Day12.Part1 do
 end
 
 defmodule Day12.Part2 do
+  def solve(input) do
+    input
+    |> Day12.Part1.parse_input()
+    |> possible_starting_states()
+    |> Enum.map(&solve_state/1)
+    |> Enum.sort()
+    |> List.first()
+  end
+
+  def solve_state(state) do
+    # We start fill_distances at 1 distance since the 0 start point
+    # has already been set by input
+    state |> Day12.Part1.fill_distances(1) |> Day12.Part1.end_distance()
+  end
+
+  def possible_starting_states(state) do
+    state.elevations |> Enum.filter(&lowest?/1) |> Enum.map(&change_start(&1, state))
+  end
+
+  def lowest?({_point, elevation}) do
+    elevation == 0
+  end
+
+  def change_start({point, _elevation}, state) do
+    %{state | recents: [point], distances: %{point => 0}}
+  end
 end
 
 defmodule Mix.Tasks.Day12 do
@@ -112,8 +138,8 @@ defmodule Mix.Tasks.Day12 do
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day12.Part1.solve(input))
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day12.Part2.solve(input))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(Day12.Part2.solve(input))
   end
 end

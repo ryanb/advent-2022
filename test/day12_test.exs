@@ -56,4 +56,8 @@ defmodule Day12Test do
       assert Day12.Part1.next_neighbors({0, 0}, state) == [{1, 0}, {0, 1}]
     end
   end
+
+  test "solves example input for part 2" do
+    assert Day12.Part2.solve(@example_input) == 29
+  end
 end
