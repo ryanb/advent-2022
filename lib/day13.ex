@@ -45,35 +45,55 @@ defmodule Day13.Part1 do
   end
 
   def pair_in_order?(left_packet, right_packet) do
-    left =
-      if left_packet == [] do
-        nil
-      else
-        hd(left_packet)
-      end
-
-    right =
-      if right_packet == [] do
-        nil
-      else
-        hd(right_packet)
-      end
-
     cond do
-      left == nil -> true
-      right == nil -> false
-      left == [] && right == [] -> pair_in_order?(tl(left_packet), tl(right_packet))
-      is_list(left) && is_list(right) -> pair_in_order?(left, right)
-      is_list(left) && !is_list(right) -> pair_in_order?(left, [right])
-      !is_list(left) && is_list(right) -> pair_in_order?([left], right)
+      left_packet == right_packet ->
+        :same
+
+      left_packet == [] ->
+        true
+
+      right_packet == [] ->
+        false
+
+      true ->
+        left = hd(left_packet)
+        right = hd(right_packet)
+
+        result = values_in_order?(left, right)
+
+        case result do
+          :same -> pair_in_order?(tl(left_packet), tl(right_packet))
+          _ -> result
+        end
+    end
+  end
+
+  def values_in_order?(left, right) do
+    cond do
+      left == right -> :same
+      is_list(left) || is_list(right) -> pair_in_order?(List.wrap(left), List.wrap(right))
       left < right -> true
       left > right -> false
-      true -> pair_in_order?(tl(left_packet), tl(right_packet))
     end
   end
 end
 
 defmodule Day13.Part2 do
+  @divider_packets [[[2]], [[6]]]
+
+  def solve(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&Day13.Part1.parse_packet/1)
+    |> Enum.concat(@divider_packets)
+    |> Enum.sort(&Day13.Part1.pair_in_order?/2)
+    # |> Enum.map(&IO.inspect(&1, charlists: :as_list, limit: :infinity, width: :infinity)
+    |> Enum.with_index()
+    |> Enum.filter(fn {packet, _index} -> packet in @divider_packets end)
+    |> Enum.map(fn {_packet, index} -> index + 1 end)
+    |> List.to_tuple()
+    |> Tuple.product()
+  end
 end
 
 defmodule Mix.Tasks.Day13 do
@@ -84,8 +104,8 @@ defmodule Mix.Tasks.Day13 do
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day13.Part1.solve(input))
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day13.Part2.solve(input))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(Day13.Part2.solve(input))
   end
 end

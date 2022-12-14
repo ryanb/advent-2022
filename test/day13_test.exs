@@ -64,6 +64,9 @@ defmodule Day13Test do
       assert Day13.Part1.pair_in_order?([1], [[2]]) == true
       assert Day13.Part1.pair_in_order?([[1]], [2]) == true
       assert Day13.Part1.pair_in_order?([[1], [2, 3, 4]], [[1], 4]) == true
+      assert Day13.Part1.pair_in_order?([[[6, [], [5, 7]], [[1], 4]]], [6, 10, 0, 0]) == false
+
+      assert Day13.Part1.pair_in_order?([[6], 5], [6]) == false
     end
 
     test "returns true when left has fewer items than right" do
@@ -74,5 +77,11 @@ defmodule Day13Test do
       assert Day13.Part1.pair_in_order?([], [[]]) == true
       assert Day13.Part1.pair_in_order?([[]], []) == false
     end
+  end
+
+  # Part 2
+
+  test "solves example input for part 2" do
+    assert Day13.Part2.solve(@example_input) == 140
   end
 end
