@@ -56,4 +56,10 @@ defmodule Day15Test do
       assert Day15.Part1.union_ranges([2..5, 4..6, 8..8]) == [8..8, 2..6]
     end
   end
+
+  # Part 2
+
+  test "solves example input for part 2" do
+    assert Day15.Part2.solve(@example_input, 20) == 56_000_011
+  end
 end

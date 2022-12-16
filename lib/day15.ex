@@ -66,6 +66,47 @@ defmodule Day15.Part1 do
 end
 
 defmodule Day15.Part2 do
+  @size 4_000_000
+
+  def solve(input, size \\ @size) do
+    input
+    |> Day15.Part1.parse_input()
+    |> uncovered_point(size)
+    |> tuning_signal()
+  end
+
+  def uncovered_point(sensors, size) do
+    0..size |> Enum.find_value(&uncovered_point_for_y(&1, sensors, size))
+  end
+
+  def uncovered_point_for_y(y, sensors, size) do
+    x =
+      sensors
+      |> Enum.map(&Day15.Part1.x_range(&1, y))
+      |> Enum.reject(&is_nil/1)
+      |> Enum.sort_by(fn first.._ -> first end)
+      |> uncovered_x_for_ranges(-1)
+
+    if x && x <= size do
+      {x, y}
+    end
+  end
+
+  def uncovered_x_for_ranges([], _last) do
+    nil
+  end
+
+  def uncovered_x_for_ranges([r1..r2 | ranges], last) do
+    if last + 1 < r1 do
+      last + 1
+    else
+      uncovered_x_for_ranges(ranges, max(r2, last))
+    end
+  end
+
+  def tuning_signal({x, y}) do
+    x * @size + y
+  end
 end
 
 defmodule Mix.Tasks.Day15 do
@@ -76,8 +117,9 @@ defmodule Mix.Tasks.Day15 do
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day15.Part1.solve(input))
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day15.Part2.solve(input))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts("This one takes a few seconds...")
+    IO.puts(Day15.Part2.solve(input))
   end
 end
