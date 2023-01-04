@@ -166,4 +166,8 @@ defmodule Day20Test do
       assert Day20.Part1.move_value(values, 1) == next_values
     end
   end
+
+  test "solves example input for part 2" do
+    assert Day20.Part2.solve(@example_input) == 1_623_178_306
+  end
 end

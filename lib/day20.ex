@@ -58,6 +58,26 @@ defmodule Day20.Part1 do
 end
 
 defmodule Day20.Part2 do
+  @decryption_key 811_589_153
+  @mix_amount 10
+
+  def solve(input) do
+    input
+    |> Day20.Part1.parse_input()
+    |> Enum.map(fn {value, index} -> {value * @decryption_key, index} end)
+    |> mix_values(@mix_amount)
+    |> Enum.map(fn {value, _index} -> value end)
+    |> Day20.Part1.target_values()
+    |> Enum.sum()
+  end
+
+  def mix_values(values, 0) do
+    values
+  end
+
+  def mix_values(values, amount) do
+    values |> Day20.Part1.move_values(0) |> mix_values(amount - 1)
+  end
 end
 
 defmodule Mix.Tasks.Day20 do
@@ -68,8 +88,8 @@ defmodule Mix.Tasks.Day20 do
 
     IO.puts("--- Part 1 ---")
     IO.puts(Day20.Part1.solve(input))
-    # IO.puts("")
-    # IO.puts("--- Part 2 ---")
-    # IO.puts(Day20.Part2.solve(input))
+    IO.puts("")
+    IO.puts("--- Part 2 ---")
+    IO.puts(Day20.Part2.solve(input))
   end
 end
